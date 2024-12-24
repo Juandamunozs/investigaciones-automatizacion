@@ -12,30 +12,42 @@ if not os.path.exists(dir_res):
 # Función para investigar un equipo
 def investigar_documento(tipo, documento):
 
-    # Configuración del controlador de Chrome
-    chrome_options = Options()
+    try:
+        options = Options()
+        options.add_argument(f"user-data-dir=C:\\Users\\juand\\AppData\\Local\\Google\\Chrome\\User Data")  
+        options.add_argument(f"profile-directory=Profile 1") 
 
-    # Ruta al ChromeDriver
-    driver_path = "C:\\selenium\\chromedriver.exe"
+        # Ruta al ejecutable de ChromeDriver
+        service = Service(r"C:\\selenium\\chromedriver.exe")  
 
-    # Configurar el servicio de ChromeDriver
-    service = Service(driver_path)
+        # Crear el driver
+        driver = webdriver.Chrome(service=service, options=options)
+        # driver = webdriver.Chrome(service=service)
 
-    # Crear instancia del navegador
-    driver = webdriver.Chrome(service=service, options=chrome_options)
+        # # Maximizar la ventana del navegador
+        driver.maximize_window()
 
-    # # Maximizar la ventana del navegador
-    driver.maximize_window()
+        res_investigacion = investigaciones(tipo, documento, driver)
 
-    investigaciones(tipo, documento, driver)
+        return res_investigacion
+    
+    except Exception as e:
+        print("Error al abrir el navegador: ", e)
 
-    return investigaciones
 
 def investigaciones(tipo, documento, driver):
 
+    res_antecedentes_policia = None
+
     try:
-        antecedentes_policia(tipo, documento, driver)
+        res_antecedentes_policia = antecedentes_policia(tipo, documento, driver)
     except Exception as e:
         print("Error en la investigación de antecedentes policiales: ", e)
 
-    input("Presione Enter para continuar...")
+    dic_investigaciones ={
+        "antecedentes_policia": res_antecedentes_policia
+    }
+
+    driver.quit()
+
+    return dic_investigaciones

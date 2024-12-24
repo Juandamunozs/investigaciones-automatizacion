@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from typing import Dict
 from service.investigacion import investigar_documento
 import time
+import json
 
 # Crear la aplicación FastAPI
 app = FastAPI()
@@ -52,6 +53,10 @@ def buscar_documento(data: DocumentRequest) -> Dict[str, str]:
     try:
         # Aquí se obtiene la información o el análisis del documento
         document_info = investigar_documento(document_type, document_number)
+        
+        # Asegúrate de que document_info sea una cadena de texto (string)
+        if not isinstance(document_info, str):
+            document_info = json.dumps(document_info)
     except Exception as e:
         raise HTTPException(status_code=404, detail=f"No se encontró información para el documento {document_type} {document_number}: {str(e)}")
     
