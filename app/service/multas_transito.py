@@ -1,1 +1,0 @@
-https://www.fcm.org.co/simit/#/estado-cuenta?numDocPlacaProp=1060986334
